@@ -63,4 +63,27 @@ class ApiService {
       return false;
     }
   }
+
+  static Future<String> generateMessageResponse(
+      String message, String name) async {
+    try {
+      final response = await http.post(
+        Uri.parse('${baseUrl}/generate_message_response/'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: json.encode({"message": message, "name": name}),
+      );
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        return responseData["response"];
+      } else {
+        throw Exception('Failed to generate message response');
+      }
+    } catch (e) {
+      print('Error generating message response: $e');
+      return 'Error generating message response';
+    }
+  }
 }

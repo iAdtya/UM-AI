@@ -17,11 +17,12 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from um_backend.api.views import health_check, save_user_data, save_questionnaire
+from um_backend.api.views import health_check, save_user_data, save_questionnaire, generate_message_response
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("health_check/", health_check),
     path("save_user_data/", save_user_data),
     path("save_questionnaire/", save_questionnaire),
+    path('generate_message_response/', generate_message_response),
 ]

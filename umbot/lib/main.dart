@@ -89,7 +89,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 }
 
-
 class QuestionnaireScreen extends StatefulWidget {
   final Map<String, String> userData;
   const QuestionnaireScreen({super.key, required this.userData});
@@ -107,7 +106,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
     final List<String> questions = [
       'How do you introduce yourself to new people?',
       'What kind of people do you like to talk to?',
-      'How would you politely decline an offer youre not interested in?',
+      'How would you politely decline an offer you\'re not interested in?',
       'What\'s your favorite way to start a conversation?',
       'How do you respond to compliments?',
     ];
@@ -146,11 +145,17 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                     'name': widget.userData['name'],
                     'responses': _responses,
                   };
-                  bool questionnaireSaved = await ApiService.saveQuestionnaireData(questionnaireData,questions);
+                  bool questionnaireSaved = await ApiService.saveQuestionnaireData(questionnaireData, questions);
 
                   if (userDataSaved && questionnaireSaved) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Data saved successfully!')),
+                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MessageScreen(userName: widget.userData['name']!),
+                      ),
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -162,6 +167,52 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class MessageScreen extends StatefulWidget {
+  final String userName;
+  const MessageScreen({super.key, required this.userName});
+
+  @override
+  State<MessageScreen> createState() => _MessageScreenState();
+}
+
+class _MessageScreenState extends State<MessageScreen> {
+  final _messageController = TextEditingController();
+  String _response = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Message Simulation'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _messageController,
+              decoration: const InputDecoration(labelText: 'Enter your message'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                String message = _messageController.text;
+                String response = await ApiService.generateMessageResponse(message, widget.userName);
+                setState(() {
+                  _response = response;
+                });
+              },
+              child: const Text('Send'),
+            ),
+            const SizedBox(height: 20),
+            Text('Response: $_response'),
+          ],
         ),
       ),
     );
