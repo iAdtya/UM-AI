@@ -183,7 +183,7 @@ class MessageScreen extends StatefulWidget {
 
 class _MessageScreenState extends State<MessageScreen> {
   final _messageController = TextEditingController();
-  String _response = "";
+  List<Map<String, String>> _messages = [];
 
   @override
   Widget build(BuildContext context) {
@@ -191,29 +191,110 @@ class _MessageScreenState extends State<MessageScreen> {
       appBar: AppBar(
         title: const Text('Message Simulation'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _messageController,
-              decoration: const InputDecoration(labelText: 'Enter your message'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                String message = _messageController.text;
-                String response = await ApiService.generateMessageResponse(message, widget.userName);
-                setState(() {
-                  _response = response;
-                });
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(8.0),
+              itemCount: _messages.length,
+              itemBuilder: (context, index) {
+                final message = _messages[index];
+                final isUserMessage = message['type'] == 'user';
+                
+                return Align(
+                  alignment: isUserMessage ? Alignment.centerRight : Alignment.centerLeft,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                    padding: const EdgeInsets.all(12.0),
+                    decoration: BoxDecoration(
+                      color: isUserMessage ? Colors.blue[100] : Colors.grey[300],
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: Text(message['text']!),
+                  ),
+                );
               },
-              child: const Text('Send'),
             ),
-            const SizedBox(height: 20),
-            Text('Response: $_response'),
-          ],
-        ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  offset: const Offset(0, -2),
+                  blurRadius: 4,
+                  color: Colors.black.withOpacity(0.1),
+                )
+              ],
+            ),
+            child: Column(
+              children: [
+                TextField(
+                  controller: _messageController,
+                  decoration: InputDecoration(
+                    hintText: 'Type your message...',
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          String botSuggestion = await ApiService.generateMessageResponse(
+                            "Generate a response for the next message",
+                            widget.userName,
+                          );
+                          setState(() {
+                            _messageController.text = botSuggestion;
+                          });
+                        },
+                        child: const Text('Answer with AI'),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (_messageController.text.trim().isEmpty) return;
+                          
+                          final userMessage = _messageController.text;
+                          setState(() {
+                            _messages.add({
+                              'type': 'user',
+                              'text': userMessage,
+                            });
+                            _messageController.clear();
+                          });
+
+                          String response = await ApiService.generateMessageResponse(
+                            userMessage,
+                            widget.userName,
+                          );
+                          
+                          setState(() {
+                            _messages.add({
+                              'type': 'bot',
+                              'text': response,
+                            });
+                          });
+                        },
+                        child: const Text('Send'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

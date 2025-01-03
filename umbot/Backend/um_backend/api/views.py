@@ -69,7 +69,7 @@ def generate_message_response(request):
             user_responses = json.load(json_file)
 
         # Generate a response using the Gemini API
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel("gemini-2.0-flash-thinking-exp-1219")
         prompt = f"{user_message}\n\nUser's conversational style based on their responses: {user_responses}"
         response = model.generate_content(prompt)
 
