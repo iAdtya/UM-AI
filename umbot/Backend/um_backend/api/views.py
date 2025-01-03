@@ -3,15 +3,21 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import json
 import os
+from dotenv import load_dotenv
 import google.generativeai as genai
+
+load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-genai.configure(api_key="AIzaSyCreuOvPTTttDq3elmB-eWwjNU51gPVbn8")
+genai_api_key = os.getenv("GEMINI_API_KEY")
+genai.configure(api_key=genai_api_key)
+
 
 @api_view(["GET"])
 def health_check(request):
     return Response({"healthy": "server healthy!!"})
+
 
 @api_view(["POST"])
 def save_user_data(request):
@@ -28,6 +34,7 @@ def save_user_data(request):
         return Response({"message": "User data saved successfully!"})
     except Exception as e:
         return Response({"error": str(e)}, status=500)
+
 
 @api_view(["POST"])
 def save_questionnaire(request):
@@ -46,6 +53,7 @@ def save_questionnaire(request):
         return Response({"message": "Questionnaire data saved successfully!"})
     except Exception as e:
         return Response({"error": str(e)}, status=500)
+
 
 @api_view(["POST"])
 def generate_message_response(request):
