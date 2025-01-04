@@ -30,10 +30,10 @@ flutter run
 
 ## Output
 
-![Questionnaire](Questionnaire.png)
-![Simulation](Simulation.png)
-![response](response.png)
-![admin](admin.png)
+![Questionnaire](/umbot/Questionnaire.png)
+![Simulation](/umbot/Simulation.png)
+![response](/umbot/response.png)
+![admin](/umbot/admin.png)
 
 ### License
 
