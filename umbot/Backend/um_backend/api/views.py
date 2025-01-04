@@ -5,6 +5,9 @@ import json
 import os
 from dotenv import load_dotenv
 import google.generativeai as genai
+    
+from rest_framework import status
+from .models import UserProfile, UserResponse
 
 load_dotenv()
 
@@ -61,18 +64,64 @@ def generate_message_response(request):
         user_message = request.data.get("message", "")
         user_name = request.data.get("name", "unknown")
 
-        # Load user responses to mimic their conversational style
+        # Load user responses
         file_path = os.path.join(
             BASE_DIR, "data", "responses", f"{user_name}_responses.json"
         )
         with open(file_path, "r") as json_file:
             user_responses = json.load(json_file)
 
-        # Generate a response using the Gemini API
-        model = genai.GenerativeModel("gemini-2.0-flash-thinking-exp-1219")
-        prompt = f"{user_message}\n\nUser's conversational style based on their responses: {user_responses}"
-        response = model.generate_content(prompt)
+        # Create a more focused prompt
+        style_analysis = """
+        You are responding as a chatbot that matches this user's style. Their questionnaire showed:
+        - They are casual and friendly: "{intro_style}"
+        - They like talking to: "{convo_pref}"
+        - They start conversations with: "{conv_starter}"
+        
+        Respond to this message briefly and naturally, matching their style: {message}
+        Only provide the direct answer, no explanations, previous context needed.
+        """.format(
+            intro_style=user_responses["question1"]["answer"],
+            convo_pref=user_responses["question2"]["answer"],
+            conv_starter=user_responses["question4"]["answer"],
+            message=user_message
+        )
 
-        return Response({"response": response.text})
+        # Generate response using Gemini API
+        model = genai.GenerativeModel("gemini-1.5-flash")
+        response = model.generate_content(style_analysis)
+
+        # Return just the generated response
+        return Response({"response": response.text.strip()})
     except Exception as e:
+        print(f"Error generating response: {e}")
         return Response({"error": str(e)}, status=500)
+    
+
+@api_view(['GET'])
+def get_all_users(request):
+    try:
+        users = UserProfile.objects.all()
+        data = [{
+            'id': user.id,
+            'name': user.name,
+            'age': user.age,
+            'location': user.location,
+            'created_at': user.created_at
+        } for user in users]
+        return Response(data)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
+
+@api_view(['GET'])
+def get_user_responses(request, user_id):
+    try:
+        responses = UserResponse.objects.filter(user_id=user_id)
+        data = [{
+            'question': response.question,
+            'answer': response.answer,
+            'created_at': response.created_at
+        } for response in responses]
+        return Response(data)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)

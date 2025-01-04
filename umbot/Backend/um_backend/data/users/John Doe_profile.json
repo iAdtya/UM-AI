@@ -1,0 +1,8 @@
+{
+    "name": "John Doe",
+    "age": "25",
+    "sex": "male",
+    "location": "New York",
+    "education": "Masters",
+    "professionalDetails": "Software Engineer"
+}

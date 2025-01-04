@@ -17,7 +17,10 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from um_backend.api.views import health_check, save_user_data, save_questionnaire, generate_message_response
+from um_backend.api.views import (
+    health_check, save_user_data, save_questionnaire, 
+    generate_message_response, get_all_users, get_user_responses
+)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -25,4 +28,6 @@ urlpatterns = [
     path("save_user_data/", save_user_data),
     path("save_questionnaire/", save_questionnaire),
     path('generate_message_response/', generate_message_response),
+    path('api/users/', get_all_users),
+    path('api/users/<int:user_id>/responses/', get_user_responses),
 ]
