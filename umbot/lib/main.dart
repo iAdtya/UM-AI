@@ -232,6 +232,8 @@ class _MessageScreenState extends State<MessageScreen> {
               children: [
                 TextField(
                   controller: _messageController,
+                  key: const Key('messageInput'), 
+                  autofocus: false, 
                   decoration: InputDecoration(
                     hintText: 'Type your message...',
                     filled: true,

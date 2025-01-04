@@ -1,6 +1,6 @@
 # UM-AI-BOT
 
-The application should simulate a "Digital Twin" that can
+The application simulate a "Digital Twin" that can
 mimic a user's conversational style and provide responses to incoming messages
 
 ## System Design
