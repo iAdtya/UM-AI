@@ -7,6 +7,35 @@ mimic a user's conversational style and provide responses to incoming messages
 
 ![system design](/umbot/sys.png)
 
+``Data Collection``
+
+- User profile data is stored via UserProfile
+- Communication preferences are captured through questionnaire responses in UserResponse
+
+``In Context Learning``
+
+```python
+style_analysis = """
+        You are responding as a chatbot that matches this user's style. Their questionnaire showed:
+        - They are casual and friendly: "{intro_style}"
+        - They like talking to: "{convo_pref}"
+        - They start conversations with: "{conv_starter}"
+        Respond to this message briefly and naturally, matching their style: {message}
+        Only provide the direct answer, no explanations, previous context needed.
+"""
+```
+
+``Generate response using Gemini API``
+
+```python
+model = genai.GenerativeModel("gemini-1.5-flash")
+response = model.generate_content(style_analysis)
+```
+
+## Improvements
+
+- Implement Federated Learing to improve response accuracy based on users personality
+
 ## Backend
 
 ```sh
@@ -74,21 +103,3 @@ Import ``um-bot.postman_collection.json`` in postman and test the api
 MIT License
 
 Copyright (c) 2024 UMBOT
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE
