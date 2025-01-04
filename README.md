@@ -35,7 +35,8 @@ response = model.generate_content(style_analysis)
 ## Improvements
 
 - Implement Federated Learing to improve response accuracy based on users personality
-
+- securely fine-tune large language models with private data using federated learning
+  
 ## Backend
 
 ```sh
