@@ -1,0 +1,81 @@
+{
+    "info": {
+        "_postman_id": "random-uuid",
+        "name": "UM-Bot API",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Health Check",
+            "request": {
+                "method": "GET",
+                "url": "http://localhost:8000/health_check/"
+            }
+        },
+        {
+            "name": "Get All Users",
+            "request": {
+                "method": "GET",
+                "url": "http://localhost:8000/api/users/"
+            }
+        },
+        {
+            "name": "Get User Responses",
+            "request": {
+                "method": "GET",
+                "url": "http://localhost:8000/api/users/1/responses/"
+            }
+        },
+        {
+            "name": "Save User Data",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": "http://localhost:8000/save_user_data/",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"name\": \"John Doe\",\n    \"age\": \"25\",\n    \"sex\": \"male\",\n    \"location\": \"New York\",\n    \"education\": \"Masters\",\n    \"professionalDetails\": \"Software Engineer\"\n}"
+                }
+            }
+        },
+        {
+            "name": "Save Questionnaire",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": "http://localhost:8000/save_questionnaire/",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"name\": \"John Doe\",\n    \"responses\": {\n        \"question1\": {\n            \"question\": \"How do you introduce yourself?\",\n            \"answer\": \"Casually and friendly\"\n        },\n        \"question2\": {\n            \"question\": \"Who do you prefer talking to?\",\n            \"answer\": \"Everyone\"\n        },\n        \"question4\": {\n            \"question\": \"How do you start conversations?\",\n            \"answer\": \"With a friendly greeting\"\n        }\n    }\n}"
+                }
+            }
+        },
+        {
+            "name": "Generate Message Response",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": "http://localhost:8000/generate_message_response/",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"name\": \"John Doe\",\n    \"message\": \"Hello, how are you?\"\n}"
+                }
+            }
+        }
+    ]
+}

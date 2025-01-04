@@ -1,16 +1,40 @@
-# umbot
+# UM-AI-BOT
 
-A new Flutter project.
+## Backend
 
-## Getting Started
+```sh
+cd Backend
+```
 
-This project is a starting point for a Flutter application.
+```sh
+pip install -r requirements.txt
+```
 
-A few resources to get you started if this is your first Flutter project:
+```sh
+cp .env.example .env
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```sh
+python manage.py runserver
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Frontend
+
+```sh
+flutter pub get
+```
+
+```sh
+flutter run
+```
+
+## Output
+
+![Questionnaire](Questionnaire.png)
+![Simulation](Simulation.png)
+![response](response.png)
+![admin](admin.png)
+
+### License
+
+This project is licensed under the MIT License.

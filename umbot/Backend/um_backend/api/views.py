@@ -26,11 +26,20 @@ def health_check(request):
 def save_user_data(request):
     try:
         user_data = request.data
-        name = user_data.get("name", "unknown")
+        
+        # Save to UserProfile model
+        user_profile = UserProfile.objects.create(
+            name=user_data.get("name", "unknown"),
+            age=user_data.get("age", ""),
+            sex=user_data.get("sex", ""),
+            location=user_data.get("location", ""),
+            education=user_data.get("education", ""),
+            professional_details=user_data.get("professionalDetails", "")
+        )
 
-        file_path = os.path.join(BASE_DIR, "data", "users", f"{name}_profile.json")
+        # Also save to JSON file (keeping existing functionality)
+        file_path = os.path.join(BASE_DIR, "data", "users", f"{user_profile.name}_profile.json")
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
-
         with open(file_path, "w") as json_file:
             json.dump(user_data, json_file, indent=4)
 
@@ -38,18 +47,26 @@ def save_user_data(request):
     except Exception as e:
         return Response({"error": str(e)}, status=500)
 
-
 @api_view(["POST"])
 def save_questionnaire(request):
     try:
         data = request.data
         name = data.get("name", "unknown")
 
-        file_path = os.path.join(
-            BASE_DIR, "data", "responses", f"{name}_responses.json"
-        )
-        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        # Get user profile
+        user_profile = UserProfile.objects.get(name=name)
 
+        # Save responses to UserResponse model
+        for key, value in data["responses"].items():
+            UserResponse.objects.create(
+                user=user_profile,
+                question=value["question"],
+                answer=value["answer"]
+            )
+
+        # Also save to JSON file (keeping existing functionality)
+        file_path = os.path.join(BASE_DIR, "data", "responses", f"{name}_responses.json")
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
         with open(file_path, "w") as json_file:
             json.dump(data["responses"], json_file, indent=4)
 
@@ -57,12 +74,13 @@ def save_questionnaire(request):
     except Exception as e:
         return Response({"error": str(e)}, status=500)
 
-
 @api_view(["POST"])
 def generate_message_response(request):
     try:
         user_message = request.data.get("message", "")
         user_name = request.data.get("name", "unknown")
+
+        user_profile = UserProfile.objects.get(name=user_name)
 
         # Load user responses
         file_path = os.path.join(
@@ -90,6 +108,13 @@ def generate_message_response(request):
         # Generate response using Gemini API
         model = genai.GenerativeModel("gemini-1.5-flash")
         response = model.generate_content(style_analysis)
+        
+        UserResponse.objects.create(
+            user=user_profile,
+            question=user_message,
+            answer=response.text.strip()
+        )
+
 
         # Return just the generated response
         return Response({"response": response.text.strip()})
