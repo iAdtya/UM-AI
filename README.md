@@ -1,5 +1,12 @@
 # UM-AI-BOT
 
+The application should simulate a "Digital Twin" that can
+mimic a user's conversational style and provide responses to incoming messages
+
+## System Design
+
+![system design](/umbot/sys.png)
+
 ## Backend
 
 ```sh
@@ -24,8 +31,10 @@ python manage.py runserver
 flutter pub get
 ```
 
+- try sticking to chrome browsers
+
 ```sh
-flutter run
+flutter run 
 ```
 
 ## Create SuperUser for Admin page

@@ -16,20 +16,20 @@ class ApiService {
 
   static Future<bool> saveUserData(Map<String, String> userData) async {
     try {
-      print('Sending user data to: ${baseUrl}/save_user_data/');
+      // print('Sending user data to: ${baseUrl}/save_user_data/');
       final response = await http.post(
-        Uri.parse('${baseUrl}/save_user_data/'),
+        Uri.parse('$baseUrl/save_user_data/'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
         body: json.encode(userData),
       );
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      // print('Response status: ${response.statusCode}');
+      // print('Response body: ${response.body}');
       return response.statusCode == 200;
     } catch (e) {
-      print('Error saving user data: $e');
+      // print('Error saving user data: $e');
       return false;
     }
   }
@@ -46,20 +46,20 @@ class ApiService {
             })),
       };
 
-      print('Sending questionnaire data to: ${baseUrl}/save_questionnaire/');
+      // print('Sending questionnaire data to: ${baseUrl}/save_questionnaire/');
       final response = await http.post(
-        Uri.parse('${baseUrl}/save_questionnaire/'),
+        Uri.parse('$baseUrl/save_questionnaire/'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
         body: json.encode(questionnaireData),
       );
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      // print('Response status: ${response.statusCode}');
+      // print('Response body: ${response.body}');
       return response.statusCode == 200;
     } catch (e) {
-      print('Error saving questionnaire data: $e');
+      // print('Error saving questionnaire data: $e');
       return false;
     }
   }
@@ -68,7 +68,7 @@ class ApiService {
       String message, String name) async {
     try {
       final response = await http.post(
-        Uri.parse('${baseUrl}/generate_message_response/'),
+        Uri.parse('$baseUrl/generate_message_response/'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -82,7 +82,7 @@ class ApiService {
         throw Exception('Failed to generate message response');
       }
     } catch (e) {
-      print('Error generating message response: $e');
+      // print('Error generating message response: $e');
       return 'Error generating message response';
     }
   }

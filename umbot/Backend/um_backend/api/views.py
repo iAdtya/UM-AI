@@ -5,7 +5,6 @@ import json
 import os
 from dotenv import load_dotenv
 import google.generativeai as genai
-    
 from rest_framework import status
 from .models import UserProfile, UserResponse
 
