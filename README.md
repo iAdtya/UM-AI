@@ -7,12 +7,12 @@ mimic a user's conversational style and provide responses to incoming messages
 
 ![system design](/umbot/sys.png)
 
-``Data Collection``
+`Data Collection`
 
 - User profile data is stored via UserProfile
 - Communication preferences are captured through questionnaire responses in UserResponse
 
-``In Context Learning``
+`In Context Learning`
 
 ```python
 style_analysis = """
@@ -25,7 +25,7 @@ style_analysis = """
 """
 ```
 
-``Generate response using Gemini API``
+`Generate response using Gemini API`
 
 ```python
 model = genai.GenerativeModel("gemini-1.5-flash")
@@ -36,8 +36,26 @@ response = model.generate_content(style_analysis)
 
 - Implement Federated Learing to improve response accuracy based on users personality
 - securely fine-tune large language models with private data using federated learning
-  
+
+## INSTALLATION
+
 ## Backend
+
+```sh
+python -m venv .venv
+```
+
+Windows
+
+```sh
+   .venv\Scripts\activate
+```
+
+Macos
+
+```sh
+   source .venv/bin/activate
+```
 
 ```sh
 cd Backend
@@ -64,31 +82,31 @@ flutter pub get
 - try sticking to chrome browsers
 
 ```sh
-flutter run 
+flutter run
 ```
 
 ## Create SuperUser for Admin page
 
-```sh
+<!-- ```sh
 cd Backend
 python manage.py makemigrations
 python manage.py migrate
-```
+``` -->
 
 ```sh
 python manage.py createsuperuser
 ```
 
-- Username
+- Username (ex= test)
 - Email (optional)
-- Password (will not be visible when typing)
+- Password (ex= test@123)
 - Password confirmation
 
-``http://localhost:8000/admin/login/``
+`http://localhost:8000/admin/login/`
 
 ## Postman-API
 
-Import ``um-bot.postman_collection.json`` in postman and test the api
+Import `um-bot.postman_collection.json` in postman and test the api
 
 ## Output
 
