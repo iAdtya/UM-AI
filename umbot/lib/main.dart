@@ -65,7 +65,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 onSaved: (value) => _userData['education'] = value!,
               ),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Professional Details'),
+                decoration:
+                    const InputDecoration(labelText: 'Professional Details'),
                 onSaved: (value) => _userData['professionalDetails'] = value!,
               ),
               const SizedBox(height: 20),
@@ -75,7 +76,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => QuestionnaireScreen(userData: _userData),
+                      builder: (context) =>
+                          QuestionnaireScreen(userData: _userData),
                     ),
                   );
                 },
@@ -125,7 +127,8 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                 return ListTile(
                   title: Text(entry.value),
                   subtitle: TextFormField(
-                    decoration: const InputDecoration(labelText: 'Your response'),
+                    decoration:
+                        const InputDecoration(labelText: 'Your response'),
                     onSaved: (value) {
                       _responses['question${entry.key + 1}'] = value ?? '';
                     },
@@ -136,16 +139,19 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
               ElevatedButton(
                 onPressed: () async {
                   _formKey.currentState!.save();
-                  
+
                   // Save user data
-                  bool userDataSaved = await ApiService.saveUserData(widget.userData);
-                  
+                  bool userDataSaved =
+                      await ApiService.saveUserData(widget.userData);
+
                   // Save questionnaire data
                   Map<String, dynamic> questionnaireData = {
                     'name': widget.userData['name'],
                     'responses': _responses,
                   };
-                  bool questionnaireSaved = await ApiService.saveQuestionnaireData(questionnaireData, questions);
+                  bool questionnaireSaved =
+                      await ApiService.saveQuestionnaireData(
+                          questionnaireData, questions);
 
                   if (userDataSaved && questionnaireSaved) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -154,7 +160,8 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MessageScreen(userName: widget.userData['name']!),
+                        builder: (context) =>
+                            MessageScreen(userName: widget.userData['name']!),
                       ),
                     );
                   } else {
@@ -200,14 +207,18 @@ class _MessageScreenState extends State<MessageScreen> {
               itemBuilder: (context, index) {
                 final message = _messages[index];
                 final isUserMessage = message['type'] == 'user';
-                
+
                 return Align(
-                  alignment: isUserMessage ? Alignment.centerRight : Alignment.centerLeft,
+                  alignment: isUserMessage
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
                   child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 4.0, horizontal: 8.0),
                     padding: const EdgeInsets.all(12.0),
                     decoration: BoxDecoration(
-                      color: isUserMessage ? Colors.blue[100] : Colors.grey[300],
+                      color:
+                          isUserMessage ? Colors.blue[100] : Colors.grey[300],
                       borderRadius: BorderRadius.circular(15.0),
                     ),
                     child: Text(message['text']!),
@@ -232,8 +243,8 @@ class _MessageScreenState extends State<MessageScreen> {
               children: [
                 TextField(
                   controller: _messageController,
-                  key: const Key('messageInput'), 
-                  autofocus: false, 
+                  key: const Key('messageInput'),
+                  autofocus: false,
                   decoration: InputDecoration(
                     hintText: 'Type your message...',
                     filled: true,
@@ -250,7 +261,8 @@ class _MessageScreenState extends State<MessageScreen> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () async {
-                          String botSuggestion = await ApiService.generateMessageResponse(
+                          String botSuggestion =
+                              await ApiService.generateMessageResponse(
                             "Generate a response for the next message",
                             widget.userName,
                           );
@@ -266,7 +278,7 @@ class _MessageScreenState extends State<MessageScreen> {
                       child: ElevatedButton(
                         onPressed: () async {
                           if (_messageController.text.trim().isEmpty) return;
-                          
+
                           final userMessage = _messageController.text;
                           setState(() {
                             _messages.add({
@@ -276,11 +288,12 @@ class _MessageScreenState extends State<MessageScreen> {
                             _messageController.clear();
                           });
 
-                          String response = await ApiService.generateMessageResponse(
+                          String response =
+                              await ApiService.generateMessageResponse(
                             userMessage,
                             widget.userName,
                           );
-                          
+
                           setState(() {
                             _messages.add({
                               'type': 'bot',
